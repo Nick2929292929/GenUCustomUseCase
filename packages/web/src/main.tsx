@@ -13,7 +13,7 @@ import Setting from './pages/Setting';
 import ChatPage from './pages/ChatPage';
 import SharedChatPage from './pages/SharedChatPage';
 import SummarizePage from './pages/SummarizePage';
-import GenerateTextPage from './pages/GenerateTextPage';
+import GenerateTextPage from './pages/GenerateTextPage.tsx';
 import EditorialPage from './pages/EditorialPage';
 import TranslatePage from './pages/TranslatePage';
 import VideoAnalyzerPage from './pages/VideoAnalyzerPage';
@@ -23,12 +23,13 @@ import RagPage from './pages/RagPage';
 import RagKnowledgeBasePage from './pages/RagKnowledgeBasePage';
 import WebContent from './pages/WebContent';
 import GenerateImagePage from './pages/GenerateImagePage';
+import GenerateMailPage from './pages/GenerateMailPage';
 import TranscribePage from './pages/TranscribePage';
 import AgentChatPage from './pages/AgentChatPage.tsx';
 import FileUploadPage from './pages/FileUploadPage.tsx';
 import { MODELS } from './hooks/useModel';
 import { Authenticator } from '@aws-amplify/ui-react';
-
+import GenerateTwoTextPage from './pages/GenerateTwoTextPage';
 const ragEnabled: boolean = import.meta.env.VITE_APP_RAG_ENABLED === 'true';
 const ragKnowledgeBaseEnabled: boolean =
   import.meta.env.VITE_APP_RAG_KNOWLEDGE_BASE_ENABLED === 'true';
@@ -84,6 +85,14 @@ const routes: RouteObject[] = [
   {
     path: '/image',
     element: <GenerateImagePage />,
+  },
+  {
+    path: '/generate-mail',
+    element: <GenerateMailPage />,
+  },
+  {
+    path: '/twochat',
+    element: <GenerateTwoTextPage/>,
   },
   {
     path: '/transcribe',

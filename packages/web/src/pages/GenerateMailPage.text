@@ -1,0 +1,353 @@
+import React, { useCallback, useEffect, useMemo} from 'react';
+import { useLocation } from 'react-router-dom';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import Textarea from '../components/Textarea';
+import Markdown from '../components/Markdown';
+import ButtonCopy from '../components/ButtonCopy';
+import Select from '../components/Select';
+import useChat from '../hooks/useChat';
+import useTyping from '../hooks/useTyping';
+import { create } from 'zustand';
+import { GenerateMailPageLocationState } from '../@types/navigate';
+import { MODELS } from '../hooks/useModel';
+import { getPrompter } from '../prompts';
+import queryString from 'query-string';
+
+type StateType = {
+  information: string;
+  setInformation: (s: string) => void;
+  context: string;
+  setContext: (s: string) => void;
+  text: string;
+  setText: (s: string) => void;
+  mailtype: string;
+  setMailtype: (s: string) => void;
+  department: string;
+  setDepartment: (s: string) => void;
+  requirement: string;
+  setRequirement: (s: string) => void;
+  service: string;
+  setDestination: (s: string) => void;
+  writingstyle: string;
+  setWritingstyle: (s: string) => void;
+  wordcount: string;
+  setWordcount: (s: string) => void;
+  clear: () => void;
+};
+
+const useGenerateMailPageState = create<StateType>((set) => {
+  const INIT_STATE = {
+    information: '',
+    context: '',
+    text: '',
+    mailtype: '',
+    department: '',
+    requirement: '',
+    service: '',
+    writingstyle: '',
+    wordcount: '',
+
+  };
+  return {
+    ...INIT_STATE,
+    setInformation: (s: string) => {
+      set(() => ({
+        information: s,
+      }));
+    },
+    setContext: (s: string) => {
+      set(() => ({
+        context: s,
+      }));
+    },
+    setText: (s: string) => {
+      set(() => ({
+        text: s,
+      }));
+    },
+    setMailtype: (s: string) => {
+      set(() => ({
+        mailtype: s,
+      }));
+    },
+    setDepartment: (s: string) => {
+      set(() => ({
+        department: s,
+      }));
+    },
+    setRequirement: (s: string) => {
+      set(() => ({
+        requirement: s,
+      }));
+    },
+    setDestination: (s: string) => {
+      set(() => ({
+        service: s,
+      }));
+    },
+    setWritingstyle: (s: string) => {
+      set(() => ({
+        writingstyle: s,
+      }));
+    },
+    setWordcount: (s: string) => {
+      set(() => ({
+        wordcount: s,
+      }));
+    },
+    clear: () => {
+      set(INIT_STATE);
+    },
+  };
+});
+
+//const vlu = "value";
+//const [items, setItems] = useState([
+//  {value: 'AAA', label: 'AAAA'},
+//  {value: 'BBB', label: 'BBBB'},
+//  {value: 'CCC', label: 'BBBB'}
+
+//]);
+  
+
+////
+//const [selectedValue2, setSelectedValue2] = useState('');
+//const options = ['AAA','BBB','CCC'];
+//
+//const handleChange = (value: string) => {
+//  setSelectedValue2(value);
+//}
+//
+  // 選択された値を管理するための状態
+//  const [selectedValue, setSelectedValue] = useState<string>('');
+
+
+    
+///
+const GenerateMailPage: React.FC = () => {
+  const {
+    information,
+    setInformation,
+    context,
+    setContext,
+    mailtype,
+    setMailtype,
+    department,
+    setDepartment,
+    requirement,
+    setRequirement,
+    service,
+    setDestination,
+    writingstyle,
+    setWritingstyle,
+    wordcount,
+    setWordcount,
+    text,
+    setText,
+    clear,
+  } = useGenerateMailPageState();
+  const { pathname, search } = useLocation();
+  const {
+    getModelId,
+    setModelId,
+    loading,
+    messages,
+    postChat,
+    continueGeneration,
+    clear: clearChat,
+    updateSystemContextByModel,
+    getStopReason,
+  } = useChat(pathname);
+  const { setTypingTextInput, typingTextOutput } = useTyping(loading);
+  const { modelIds: availableModels } = MODELS;
+  const modelId = getModelId();
+  const prompter = useMemo(() => {
+    return getPrompter(modelId);
+  }, [modelId]);
+  const stopReason = getStopReason();
+
+  useEffect(() => {
+    updateSystemContextByModel();
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, [prompter]);
+
+  const disabledExec = useMemo(() => {
+    return mailtype === '' || loading;
+  }, [mailtype, loading]);
+
+  useEffect(() => {
+    const _modelId = !modelId ? availableModels[0] : modelId;
+    if (search !== '') {
+      const params = queryString.parse(search) as GenerateMailPageLocationState;
+      setInformation(params.Param ?? '');
+      setContext(params.Param2 ?? '');
+      setMailtype(params.mailtype ?? '');
+      setDepartment(params.department ?? '');
+      setRequirement(params.requirement ?? '');
+      setDestination(params.service ?? '');
+      setWritingstyle(params.writingstyle ?? '');
+      setWordcount(params.wordcount ?? '');
+
+      setModelId(
+        availableModels.includes(params.modelId ?? '')
+          ? params.modelId!
+          : _modelId
+      );
+    } else {
+      setModelId(_modelId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setInformation, setContext, setmailtype, setDepartment, setRequirement,setDestination,setWritingstyle,setWordcount, modelId, availableModels, search]);
+
+  useEffect(() => {
+    setTypingTextInput(text);
+  }, [text, setTypingTextInput]);
+
+  const getGeneratedMail = (information: string, context: string,  mailtype: string, department: string ,requirement: string, destination: string, writingstyle: string, wordcount: string,  ) => {
+    postChat(
+      prompter.generateMailPrompt({
+        mailtype,
+        department,
+        requirement,
+        destination,
+        writingstyle,
+        wordcount,
+        information,
+        context, 
+      }),
+      true
+    );
+  };
+
+  // リアルタイムにレスポンスを表示
+  useEffect(() => {
+    if (messages.length === 0) return;
+    const _lastMessage = messages[messages.length - 1];
+    if (_lastMessage.role !== 'assistant') return;
+    const _response = messages[messages.length - 1].content;
+    setText(_response.trim());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
+
+  // 要約を実行
+  const onClickExec = useCallback(() => {
+    if (loading) return;
+    getGeneratedMail(information, context, mailtype, department, requirement, destination, writingstyle, wordcount, );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [information, context, mailtype, department, requirement, destination, writingstyle, wordcount, loading]);
+
+  // リセット
+  const onClickClear = useCallback(() => {
+    clear();
+    clearChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div className="grid grid-cols-12">
+      <div className="invisible col-span-12 my-0 flex h-0 items-center justify-center text-xl font-semibold lg:visible lg:my-5 lg:h-min print:visible print:my-5 print:h-min">
+        Mail生成
+      </div>
+      <div className="col-span-12 col-start-1 mx-2 lg:col-span-10 lg:col-start-2 xl:col-span-10 xl:col-start-2">
+        <Card label="文章の元になる情報">
+          <div className="mb-2 flex w-full">
+            <Select
+              value={modelId}
+              onChange={setModelId}
+              options={availableModels.map((m) => {
+                return { value: m, label: m };
+              })}
+            />
+          </div>
+          <Card label="自身の情報">
+              業種
+            <Textarea
+              placeholder="ご自身の業種を入力してください（例）メーカー、メディアなど"
+              value={mailtype}
+              onChange={setMailtype}
+              maxHeight={-1}
+            />
+              部門
+            <Textarea
+              placeholder="ご自身の部門を入力してください（例）営業部門、開発部門など"
+              value={department}
+              onChange={setDepartment}
+              maxHeight={-1}
+            />
+          </Card>
+          < Card label="送信相手の情報">
+            宛先
+            <Textarea
+              placeholder="宛先を入力してください（例）パートナー会社、お客様会社など"
+              value={destination}
+              onChange={setDestination}
+              maxHeight={-1}
+            />
+          </Card>
+          <Card label="生成する文章について">
+              要件
+            <Textarea
+              placeholder="メールの要件を入力してください（例）打合せ日程の確認、商品発注のお願いなど"
+              value={requirement}
+              onChange={setRequirement}
+              maxHeight={-1}
+            />
+            
+          
+              文章スタイル
+            <Textarea
+              placeholder="文章のスタイルを入力してください（例）カジュアル、フォーマルなど"
+              value={writingstyle}
+              onChange={setWritingstyle}
+              maxHeight={-1}
+            />
+              文字数制限
+            <Textarea
+              placeholder="文字数の制限を入力してください　＊入力された数字以下の文字数で出力されます"
+              value={wordcount}
+              onChange={setWordcount}
+              maxHeight={-1}
+            />
+          </Card>
+          その他
+            <Textarea
+              placeholder="その他、なにか追加で指定したいものがあれば入力してください"
+              value={context}
+              onChange={setContext}
+            />
+          <div className="flex justify-end gap-3">
+            {stopReason === 'max_tokens' && (
+              <Button onClick={continueGeneration}>続きを出力</Button>
+            )}
+
+            <Button outlined onClick={onClickClear} disabled={disabledExec}>
+              クリア
+            </Button>
+
+            <Button disabled={disabledExec} onClick={onClickExec}>
+              実行
+            </Button>
+          </div>
+
+          <div className="mt-5 rounded border border-black/30 p-1.5">
+            <Markdown>{typingTextOutput}</Markdown>
+            {!loading && text === '' && (
+              <div className="text-gray-500">
+                生成された文章がここに表示されます
+              </div>
+            )}
+            {loading && (
+              <div className="border-aws-sky size-5 animate-spin rounded-full border-4 border-t-transparent"></div>
+            )}
+            <div className="flex w-full justify-end">
+              <ButtonCopy text={text} interUseCasesKey="text"></ButtonCopy>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default GenerateMailPage;

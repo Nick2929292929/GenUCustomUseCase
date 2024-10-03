@@ -2,6 +2,7 @@ import {
   ChatParams,
   EditorialParams,
   GenerateTextParams,
+  GenerateMailParams,
   Prompter,
   PromptList,
   RagParams,
@@ -145,6 +146,12 @@ export const mistralPrompter: Prompter = {
 [/INST]わかりました。[INST]${params.sentence}`;
   },
   generateTextPrompt(params: GenerateTextParams): string {
+    return `これから文章を与えるので「${params.context}」という指示通りに日本語の文章に変換してください。出力は変換結果の文章だけを <output>{変換結果の文章}</output> のように xml タグで囲って出力してください。それ以外の文章は一切出力してはいけません。例外はありません。[/INST]わかりました。[INST]${params.information}`;
+  },
+  generateTwoTextPagePrompt(params: GenerateTextParams): string {
+    return `これから文章を与えるので「${params.context}」という指示通りに日本語の文章に変換してください。出力は変換結果の文章だけを <output>{変換結果の文章}</output> のように xml タグで囲って出力してください。それ以外の文章は一切出力してはいけません。例外はありません。[/INST]わかりました。[INST]${params.information}`;
+  },
+  generateMailPrompt(params: GenerateMailParams): string {
     return `これから文章を与えるので「${params.context}」という指示通りに日本語の文章に変換してください。出力は変換結果の文章だけを <output>{変換結果の文章}</output> のように xml タグで囲って出力してください。それ以外の文章は一切出力してはいけません。例外はありません。[/INST]わかりました。[INST]${params.information}`;
   },
   translatePrompt(params: TranslateParams): string {

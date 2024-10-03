@@ -18,6 +18,8 @@ export type InterUseCase = {
 
 export type BaseQueryParams = {
   modelId?: string;
+  modelId2?: string;
+  modelId3?: string;
 };
 
 export type ChatPageQueryParams = BaseQueryParams & {
@@ -38,6 +40,26 @@ export type GenerateTextPageQueryParams = BaseQueryParams & {
   information?: string;
   context?: string;
 };
+
+export type GenerateTwoTextPageParams = BaseQueryParams & {
+  information?: string;
+  context?: string;
+};
+
+export type GenerateMailPageLocationState = BaseQueryParams & {
+  Param?: string;
+  Param2?: string;
+  mailtype?: string;
+  transmission?: string;
+  requirement?: string;
+  service?: string;
+  writingstyle?: string;
+  wordcount?: string;
+  subjectcount?: string;
+
+};
+
+
 
 export type RagPageQueryParams = BaseQueryParams & {
   content?: stiring;

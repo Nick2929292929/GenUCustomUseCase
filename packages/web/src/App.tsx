@@ -15,6 +15,7 @@ import {
   PiGear,
   PiGlobe,
   PiX,
+  PiTerminal,
   PiRobot,
   PiUploadSimple,
   PiVideoCamera,
@@ -55,6 +56,13 @@ const items: ItemProps[] = [
   {
     label: 'チャット',
     to: '/chat',
+    icon: <PiChatsCircle />,
+    display: 'usecase' as const,
+  },
+
+  {
+    label: 'Twoチャット',
+    to: '/twochat',
     icon: <PiChatsCircle />,
     display: 'usecase' as const,
   },
@@ -118,6 +126,12 @@ const items: ItemProps[] = [
     label: '画像生成',
     to: '/image',
     icon: <PiImages />,
+    display: 'usecase' as const,
+  },
+  {
+    label: 'Mail生成',
+    to: '/generate-mail',
+    icon: <PiTerminal />,
     display: 'usecase' as const,
   },
   multiModalEnabled

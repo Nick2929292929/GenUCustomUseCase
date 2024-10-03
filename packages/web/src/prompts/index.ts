@@ -36,6 +36,24 @@ export type GenerateTextParams = {
   context: string;
 };
 
+export type GenerateTwoTextParams = {
+  information: string;
+  context: string;
+};
+
+export type GenerateMailParams = {
+  information: string;
+  context: string;
+  mailtype: string;
+  service: string;
+  requirement: string;
+  transmission: string;
+  writingstyle: string;
+  wordcount: string;
+  subjectcount: string;
+  selected: string;
+};
+
 export type TranslateParams = {
   sentence: string;
   language: string;
@@ -80,6 +98,8 @@ export interface Prompter {
   summarizePrompt(params: SummarizeParams): string;
   editorialPrompt(params: EditorialParams): string;
   generateTextPrompt(params: GenerateTextParams): string;
+  generateMailPrompt(param: GenerateMailParams): string;
+  generateTwoTextPagePrompt(param: GenerateTwoTextParams): string;
   translatePrompt(params: TranslateParams): string;
   webContentPrompt(params: WebContentParams): string;
   ragPrompt(params: RagParams): string;
