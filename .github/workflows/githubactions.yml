@@ -25,7 +25,7 @@ jobs:
         id: set-var
         run: |
           ROLE=${{ env.AWS_OIDC_ROLE_ARN }}
-          DEPLOY_CMD="npm -w packages/cdk run -- cdk deploy GenerativeAiUseCasesStack --require-approval never"
+          DEPLOY_CMD="npm -w packages/cdk run -- cdk deploy --require-approval never --all"
           echo "deploy_role=$ROLE" >> $GITHUB_OUTPUT
           echo "deploy_cmd=$DEPLOY_CMD" >> $GITHUB_OUTPUT
       - name: Assume Role
