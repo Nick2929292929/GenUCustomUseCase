@@ -56,7 +56,7 @@ export type GenerateMailPageLocationState = BaseQueryParams & {
   writingstyle?: string;
   wordcount?: string;
   subjectcount?: string;
-
+  selected?: string;
 };
 
 

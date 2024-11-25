@@ -7,8 +7,8 @@ import Markdown from '../components/Markdown';
 import ButtonCopy from '../components/ButtonCopy';
 import Select from '../components/Select2';
 import useChat from '../hooks/useChat';
-import useChat2 from '../hooks/useChat2';
-import useChat3 from '../hooks/useChat3';
+import useChat2 from '../hooks/useChat';
+import useChat3 from '../hooks/useChat';
 import useTyping from '../hooks/useTyping';
 import useTyping2 from '../hooks/useTyping2';
 import useTyping3 from '../hooks/useTyping3';
@@ -158,7 +158,7 @@ const GenerateTwoTextPage: React.FC = () => {
   }, [information, loading]);
 
   useEffect(() => {
-    const _modelId = !modelId ? availableModels[0] : modelId;
+    const _modelId = !modelId ? availableModels[2] : modelId;
     if (search !== '') {
       const params = queryString.parse(search) as GenerateTwoTextPageParams;
       setInformation(params.information ?? '');
@@ -172,7 +172,7 @@ const GenerateTwoTextPage: React.FC = () => {
     } else {
       setModelId(_modelId);
     }
-    const _modelId2 = !modelId2 ? availableModels[0] : modelId2;
+    const _modelId2 = !modelId2 ? availableModels[1] : modelId2;
     if (search !== '') {
       const params = queryString.parse(search) as GenerateTwoTextPageParams;
 
@@ -185,7 +185,7 @@ const GenerateTwoTextPage: React.FC = () => {
       setModelId2(_modelId2);
     }
 
-    const _modelId3 = !modelId3 ? availableModels[0] : modelId3;
+    const _modelId3 = !modelId3 ? availableModels[5] : modelId3;
     if (search !== '') {
       const params = queryString.parse(search) as GenerateTwoTextPageParams;
 
@@ -287,7 +287,7 @@ const GenerateTwoTextPage: React.FC = () => {
   return (
     <div className="grid grid-cols-12">
       <div className="invisible col-span-12 my-0 flex h-0 items-center justify-center text-xl font-semibold lg:visible lg:my-5 lg:h-min print:visible print:my-5 print:h-min">
-        2つのLLMを用いた文章生成
+        3つのLLMを用いた文章生成
       </div>
       <div className="col-span-12 col-start-1 mx-0 lg:col-span-12 lg:col-start-1 xl:col-span-12 xl:col-start-1">
         <Card label='文章のもとになる情報'>

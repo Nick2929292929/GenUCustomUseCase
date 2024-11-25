@@ -1,14 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import Markdown from './Markdown';
 import ButtonCopy from './ButtonCopy';
-import ButtonFeedback from './ButtonFeedback';
 import ZoomUpImage from './ZoomUpImage';
 import { PiUserFill, PiChalkboardTeacher } from 'react-icons/pi';
 import { BaseProps } from '../@types/common';
 import { ShownMessage } from 'generative-ai-use-cases-jp';
 import BedrockIcon from '../assets/bedrock.svg?react';
-import useChat from '../hooks/useChat';
 import useTyping from '../hooks/useTyping';
 import useFileApi from '../hooks/useFileApi';
 import FileCard from './FileCard';
@@ -25,9 +22,6 @@ const ChatMessage: React.FC<Props> = (props) => {
     return props.chatContent;
   }, [props]);
 
-  const { pathname } = useLocation();
-  const { sendFeedback } = useChat(pathname);
-  const [isSendingFeedback, setIsSendingFeedback] = useState(false);
   const { getFileDownloadSignedUrl } = useFileApi();
 
   const { setTypingTextInput, typingTextOutput } = useTyping(
@@ -57,21 +51,8 @@ const ChatMessage: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatContent]);
 
-  const disabled = useMemo(() => {
-    return isSendingFeedback || !props.chatContent?.id;
-  }, [isSendingFeedback, props]);
 
-  const onSendFeedback = async (feedback: string) => {
-    if (!disabled) {
-      setIsSendingFeedback(true);
-      if (feedback !== chatContent?.feedback) {
-        await sendFeedback(props.chatContent!.createdDate!, feedback);
-      } else {
-        await sendFeedback(props.chatContent!.createdDate!, 'none');
-      }
-      setIsSendingFeedback(false);
-    }
-  };
+
 
   return (
     <div
@@ -193,22 +174,6 @@ const ChatMessage: React.FC<Props> = (props) => {
                 />
                 {chatContent && (
                   <>
-                    <ButtonFeedback
-                      className="mx-0.5"
-                      feedback="good"
-                      message={chatContent}
-                      disabled={disabled}
-                      onClick={() => {
-                        onSendFeedback('good');
-                      }}
-                    />
-                    <ButtonFeedback
-                      className="ml-0.5"
-                      feedback="bad"
-                      message={chatContent}
-                      disabled={disabled}
-                      onClick={() => onSendFeedback('bad')}
-                    />
                   </>
                 )}
               </>

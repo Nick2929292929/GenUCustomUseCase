@@ -30,7 +30,7 @@ const ExpandableMenu: React.FC<Props> = (props) => {
         {props.icon && <span className="mr-1">{props.icon}</span>}
         <span className="mr-1">{props.title}</span>
         {props.subTitle && (
-          <span className="text-gray-400">{props.subTitle}</span>
+          <span className="text-black">{props.subTitle}</span>
         )}
       </div>
 

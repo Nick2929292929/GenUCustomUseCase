@@ -61,7 +61,7 @@ const items: ItemProps[] = [
   },
 
   {
-    label: 'Twoチャット',
+    label: '複数言語モデル文章生成',
     to: '/twochat',
     icon: <PiChatsCircle />,
     display: 'usecase' as const,

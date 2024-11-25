@@ -16,7 +16,7 @@ import {
   PiRobot,
   PiVideoCamera,
 } from 'react-icons/pi';
-import AwsIcon from '../assets/aws.svg?react';
+import DTSIcon from '../assets/DTS_FullColor_Logo.png';
 import useInterUseCases from '../hooks/useInterUseCases';
 import {
   AgentPageQueryParams,
@@ -253,8 +253,10 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="pb-24">
-      <div className="bg-aws-squid-ink flex flex-col items-center justify-center px-3 py-5 text-xl font-semibold text-white lg:flex-row">
-        <AwsIcon className="mr-5 size-20" />
+      {/*背景色*/}
+      <div className="bg-blue-500 flex flex-col items-center justify-center px-3 py-5 text-xl font-semibold text-white lg:flex-row">
+        {/*アイコン*/}
+        <img src={DTSIcon} style={{width: 80, height: 34}} />
         ではじめる生成 AI
       </div>
 

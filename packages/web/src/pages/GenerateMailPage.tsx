@@ -34,8 +34,8 @@ const radiobuttons: Radio[] = [
     value: "親切"
   },
   {
-    label: "フォーマルな",
-    value: "フォーマル"
+    label: "読んでいて楽しくなるような",
+    value: "読んでいて楽しくなるような"
   }
 ]
 const mailtypelist: Option[] = [
@@ -250,8 +250,9 @@ const GenerateMailPage: React.FC = () => {
   };
 
   const [selected, setSelected] = useState<string>(radiobuttons[0].value);
-  const changeValue = (event: React.ChangeEvent<HTMLInputElement>) => setSelected(event.target.value);
-  
+  const changeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelected(event.target.value);
+  };
   const { setTypingTextInput, typingTextOutput } = useTyping(loading1);
   const { modelIds: availableModels } = MODELS;
   const modelId = getModelId1();
@@ -282,6 +283,7 @@ const GenerateMailPage: React.FC = () => {
       setWritingstyle(params.writingstyle ?? '');
       setWordcount(params.wordcount ?? '');
       setSubjectcount(params.subjectcount ?? '');
+      setSelected(params.selected ?? '');
 
       setModelId1(
         availableModels.includes(params.modelId ?? '')
@@ -292,13 +294,13 @@ const GenerateMailPage: React.FC = () => {
       setModelId1(_modelId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setInformation, setContext, setMailtype, setService, setRequirement,setTransmission,setWritingstyle,setWordcount,setSubjectcount, modelId, availableModels, search]);
+  }, [setInformation, setContext, setMailtype, setService, setRequirement,setTransmission,setWritingstyle,setWordcount,setSubjectcount,setSelected, modelId, availableModels, search]);
 
   useEffect(() => {
     setTypingTextInput(text);
   }, [text, setTypingTextInput]);
 
-  const getGeneratedMail = (information: string, context: string,  mailtype: string, service: string ,requirement: string, transmission: string, writingstyle: string, wordcount: string, subjectcount: string,  ) => {
+  const getGeneratedMail = (information: string, context: string,  mailtype: string, service: string ,requirement: string, transmission: string, writingstyle: string, wordcount: string, subjectcount: string,selected: string,  ) => {
     postChat1(
       prompter.generateMailPrompt({
         mailtype,
@@ -344,9 +346,9 @@ const GenerateMailPage: React.FC = () => {
   // 要約を実行
   const onClickExec = useCallback(() => {
     if (loading1) return;
-    getGeneratedMail(information, context, mailtype, service, requirement, transmission, writingstyle, wordcount,subjectcount, );
+    getGeneratedMail(information, context, mailtype, service, requirement, transmission, writingstyle, wordcount,subjectcount,selected, );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [information, context, mailtype, service, requirement, transmission, writingstyle, wordcount,subjectcount, loading1]);
+  }, [information, context, mailtype, service, requirement, transmission, writingstyle, wordcount,subjectcount,selected, loading1]);
 
   // リセット
   const onClickClear = useCallback(() => {
@@ -453,7 +455,6 @@ const GenerateMailPage: React.FC = () => {
                 <div className="d-flex">
                   {radiobuttons.map((radio) => (
                     <div className="form-check me-3 mb-2" key={radio.value}>
-                      <label>
                         <input
                           className="form-check-input"
                           type="radio"
@@ -462,7 +463,6 @@ const GenerateMailPage: React.FC = () => {
                           checked={radio.value === selected}
                           onChange={changeValue}
                         />
-                      </label>
                       <label className="form-check-label">
                         <span className="fs-6">{radio.label}</span>
                       </label>

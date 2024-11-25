@@ -21,15 +21,15 @@
     "kendraIndexArn": null,
     "kendraDataSourceBucketName": null,
     "kendraIndexScheduleEnabled": false,
-    "kendraIndexScheduleCreateCron": null,
-    "kendraIndexScheduleDeleteCron": null,
+    "kendraIndexScheduleCreateCron":{ "minute": "0", "hour": "23", "month": "*", "weekDay": "SUN-THU" },
+    "kendraIndexScheduleDeleteCron":{ "minute": "0", "hour": "11", "month": "*", "weekDay": "MON-FRI" },
     "ragKnowledgeBaseEnabled": false,
     "ragKnowledgeBaseStandbyReplicas": false,
-    "ragKnowledgeBaseAdvancedParsing": false,
+    "ragKnowledgeBaseAdvancedParsing": true,
     "ragKnowledgeBaseAdvancedParsingModelId": "anthropic.claude-3-sonnet-20240229-v1:0",
     "embeddingModelId": "amazon.titan-embed-text-v2:0",
-    "selfSignUpEnabled": true,
-    "allowedSignUpEmailDomains": null,
+    "selfSignUpEnabled": false,
+    "allowedSignUpEmailDomains": ["dts.co.jp"],
     "samlAuthEnabled": false,
     "samlCognitoDomainName": "",
     "samlCognitoFederatedIdentityProviderName": "",
@@ -38,18 +38,27 @@
       "anthropic.claude-3-sonnet-20240229-v1:0",
       "anthropic.claude-3-haiku-20240307-v1:0",
       "anthropic.claude-3-5-sonnet-20240620-v1:0",
-      "cohere.command-r-plus-v1:0"
+      "cohere.command-r-plus-v1:0",
+      "meta.llama3-70b-instruct-v1:0",
+      "us.meta.llama3-2-90b-instruct-v1:0"
+      
 
     ],
     "imageGenerationModelIds": [
-      "stability.stable-diffusion-xl-v1"
+      "stability.stable-diffusion-xl-v1",
+      "amazon.titan-image-generator-v2:0",
+      "amazon.titan-text-premier-v1:0"
     ],
     "endpointNames": [],
-    "agentEnabled": false,
+    "agentEnabled": true,
     "agentRegion": "us-east-1",
     "searchAgentEnabled": false,
     "searchApiKey": "",
-    "agents": [],
+    "agents": [{
+      "displayName": "Code Interpreter",
+      "agentId": "MZXRUCWMJO",
+      "aliasId": "QVSL8WG13U"
+    }],
     "allowedIpV4AddressRanges": null,
     "allowedIpV6AddressRanges": null,
     "allowedCountryCodes": null,
