@@ -1,0 +1,40 @@
+name: Deploy Cdk
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  AWS_OIDC_ROLE_ARN: arn:aws:iam::008971664625:role/GithubActionsRole
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy_cdk:
+    name: 'deploy_cdk'
+    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: /packages/cdk
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set using var
+        id: set-var
+        run: |
+          ROLE=${{ env.AWS_OIDC_ROLE_ARN }}
+          DEPLOY_CMD="npm -w packages/cdk run -- cdk deploy GenerativeAiUseCasesStack --require-approval never"
+          echo "deploy_role=$ROLE" >> $GITHUB_OUTPUT
+          echo "deploy_cmd=$DEPLOY_CMD" >> $GITHUB_OUTPUT
+      - name: Assume Role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ steps.set-var.outputs.deploy_role }}
+          aws-region: ${{env.AWS_REGION}}
+      - name: Install dependencies
+        run: npm install
+      - name: CDK Deploy
+        run: |
+          ${{ steps.set-var.outputs.deploy_cmd }}
