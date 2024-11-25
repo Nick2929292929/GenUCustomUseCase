@@ -7,7 +7,7 @@ on:
 env:
   AWS_OIDC_ROLE_ARN: arn:aws:iam::008971664625:role/GithubActionsRole
   AWS_REGION: ap-northeast-1
- 
+  
 jobs:
   deploy_cdk:
     name: 'deploy_cdk'
